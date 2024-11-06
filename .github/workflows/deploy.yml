@@ -21,7 +21,7 @@ jobs:
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
-        pip install -r requirements.txt  # if you have any dependencies listed in requirements.txt
+#        pip install -r requirements.txt  # if you have any dependencies listed in requirements.txt
 
     - name: Zip Lambda function code
       run: zip -r my_lambda_function.zip lambda/  # Assuming your Lambda code is in a 'lambda' directory
