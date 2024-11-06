@@ -1,0 +1,43 @@
+name: Deploy Lambda Function
+
+on:
+  push:
+    branches:
+      - main  # Trigger this workflow on push to main branch
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: '3.10'
+    
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt  # if you have any dependencies listed in requirements.txt
+
+    - name: Zip Lambda function code
+      run: zip -r my_lambda_function.zip lambda/  # Assuming your Lambda code is in a 'lambda' directory
+
+    - name: Set up AWS credentials
+      uses: aws-actions/configure-aws-credentials@v1
+      with:
+        aws_access_key_id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws_secret_access_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws_region: us-east-1  # Set to the region of your Lambda function
+
+    - name: Upload Lambda zip to S3
+      run: |
+        aws s3 cp my_lambda_function.zip s3://my-lambda-deployment-bucket-12345/lambda/my_lambda_function.zip  # Ensure the bucket name is correct
+
+    - name: Apply Terraform
+      run: |
+        terraform init
+        terraform apply -auto-approve
