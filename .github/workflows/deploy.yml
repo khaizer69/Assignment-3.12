@@ -33,10 +33,6 @@ jobs:
         aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         aws-region: us-east-1  # Set to the region of your Lambda function
 
-    - name: Upload Lambda zip to S3
-      run: |
-        aws s3 cp my_lambda_function.zip s3://my-lambda-deployment-bucket-12345/lambda/my_lambda_function.zip  # Ensure the bucket name is correct
-
     - name: Apply Terraform
       run: |
         terraform init
